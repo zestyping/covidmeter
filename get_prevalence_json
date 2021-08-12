@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+
+import json, os, requests, shutil, sys, tempfile, time
+
+BASE_URL = 'https://raw.githubusercontent.com/microcovid/microcovid/main'
+DEST_DIR = os.getcwd() + '/data'
+TEMP_DIR = tempfile.mkdtemp()
+CACHE_FILE = '.prevalence_data.json'
+os.makedirs(DEST_DIR, exist_ok=True)
+
+
+def download_file(path):
+    print(f'Fetching {path}...')
+    dir = os.path.dirname(path)
+    if dir:
+        os.makedirs(dir, exist_ok=True)
+    with open(path, 'w') as f:
+        f.write(requests.get(f'{BASE_URL}/{path}').text)
+
+def run_update_prevalence():
+    if os.path.exists(f'{DEST_DIR}/{CACHE_FILE}'):
+        shutil.copy(f'{DEST_DIR}/{CACHE_FILE}', '.')
+
+    download_file('update_prevalence.py')
+    download_file('us_state_abbrev.py')
+    download_file('public/tracker/vaccine_table.csv')
+    download_file('src/data/location.ts')
+    sys.path.insert(0, '.')
+
+    import update_prevalence
+
+    def patched_json(self):
+        result = update_prevalence.pydantic.BaseModel.json(self)
+        with open(f'{DEST_DIR}/prevalence.json', 'w') as f:
+            json.dump(json.loads(result), f, indent=2)
+        return result
+
+    update_prevalence.sleep = lambda seconds: time.sleep(seconds * 3)
+    update_prevalence.AppLocations.json = patched_json
+    update_prevalence.main()
+
+    if os.path.exists(CACHE_FILE):
+        shutil.copy(CACHE_FILE, DEST_DIR)
+
+try:
+    os.chdir(TEMP_DIR)
+    run_update_prevalence()
+finally:
+    os.chdir(DEST_DIR)
+    shutil.rmtree(TEMP_DIR)
+
