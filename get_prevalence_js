@@ -2,12 +2,15 @@
 
 import json, os, requests, shutil, sys, tempfile, time
 
+if len(sys.argv) < 2:
+    raise SystemExit(f'Usage: {sys.argv[0]} <covidactnow.org API key>')
+
 BASE_URL = 'https://raw.githubusercontent.com/microcovid/microcovid/main'
 DEST_DIR = os.getcwd() + '/data'
 TEMP_DIR = tempfile.mkdtemp()
 CACHE_FILE = '.prevalence_data.json'
 os.makedirs(DEST_DIR, exist_ok=True)
-
+os.environ['CAN_API_KEY'] = sys.argv[1]
 
 def download_file(path):
     print(f'Fetching {path}...')
@@ -31,8 +34,11 @@ def run_update_prevalence():
 
     def patched_json(self):
         result = update_prevalence.pydantic.BaseModel.json(self)
-        with open(f'{DEST_DIR}/prevalence.json', 'w') as f:
+        with open(f'{DEST_DIR}/prevalence.js', 'w') as f:
+            f.write('prevalence = ')
             json.dump(json.loads(result), f, indent=2)
+            f.write(';\n')
+        print(f'Wrote {DEST_DIR}/prevalence.js.')
         return result
 
     update_prevalence.sleep = lambda seconds: time.sleep(seconds * 3)
