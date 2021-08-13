@@ -21,9 +21,6 @@ def download_file(path):
         f.write(requests.get(f'{BASE_URL}/{path}').text)
 
 def run_update_prevalence():
-    if os.path.exists(f'{DEST_DIR}/{CACHE_FILE}'):
-        shutil.copy(f'{DEST_DIR}/{CACHE_FILE}', '.')
-
     download_file('update_prevalence.py')
     download_file('us_state_abbrev.py')
     download_file('public/tracker/vaccine_table.csv')
@@ -36,7 +33,7 @@ def run_update_prevalence():
         result = update_prevalence.pydantic.BaseModel.json(self)
         prevalence = json.loads(result)
         for key in prevalence:
-            prevalence[key]['estimatedPrevalence'] = parseFloat(
+            prevalence[key]['estimatedPrevalence'] = float(
               self.__root__[key].as_csv_data()['Estimated prevalence']
             )
         with open(f'{DEST_DIR}/prevalence.js', 'w') as f:
@@ -56,13 +53,13 @@ def run_update_prevalence():
     with open(f'{DEST_DIR}/prevalence.js', 'a') as f:
         f.write('const effective_date = "' + effective_date + '";\n');
 
-    if os.path.exists(CACHE_FILE):
-        shutil.copy(CACHE_FILE, DEST_DIR)
-
 try:
     os.chdir(TEMP_DIR)
+    if os.path.exists(f'{DEST_DIR}/{CACHE_FILE}'):
+        shutil.copy(f'{DEST_DIR}/{CACHE_FILE}', '.')
     run_update_prevalence()
 finally:
+    if os.path.exists(CACHE_FILE):
+        shutil.copy(CACHE_FILE, DEST_DIR)
     os.chdir(DEST_DIR)
     shutil.rmtree(TEMP_DIR)
-

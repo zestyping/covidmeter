@@ -11,8 +11,11 @@ function mulberry32(a) {
 var rand = mulberry32(1337);
 var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT);
 for (var node = walker.nextNode(); node; node = walker.nextNode()) {
+  const contentExpr = node.getAttribute('content');
+  if (contentExpr) {
+    node.innerText = eval(contentExpr);
+  }
   const digitsExpr = node.getAttribute('digits');
-  const pairs = [];
   if (digitsExpr) {
     const count = eval(digitsExpr);
     const digits = [
