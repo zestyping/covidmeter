@@ -1,3 +1,4 @@
+<meta name="mobile-web-app-capable" content="yes">
 <meta http-equiv="refresh" content="3600">
 <script src="prevalence.js"></script>
 <script src="model.js"></script>
@@ -36,11 +37,8 @@ label a {
 }
 
 th { text-align: right; }
-td { text-align: center; }
-td, th {
-  min-width: 16rem;
-  height: 4rem;
-}
+td { text-align: center; min-width: 16rem; }
+th, td { height: 4rem; }
 
 .digit {
   display: inline-block;
@@ -73,10 +71,13 @@ td, th {
 .digit.d9 { background-position: -18.9rem 0; }
 </style>
 
-<label>model by <a href="http://microcovid.org/">microcovid.org</a></label><br>
+<label>
+  <span onclick="document.documentElement.requestFullscreen()">
+    model
+  </span> by <a href="http://microcovid.org/">microcovid.org</a></label><br>
 <label>data from 
   <a href="https://github.com/CSSEGISandData/COVID-19">johns hopkins</a>
-  &amp; <a href="https://covidactnow.org/data-api">covidactnow.org</a>
+  &amp; <a href="https://covidactnow.org/data-api">covidactnow</a>
   effective <span content="effective_date"></span></label>
 <div>
   <table>
@@ -116,7 +117,7 @@ td, th {
       <td digits='uc("mrna2", loc.santa_clara.vac, 60)'></td>
     </tr>
     <tr>
-      <td></td>
+      <th></th>
       <td colspan=2>
         <label>microcovids received per hour</label><br>
         <label>by a fully mrna-vaccinated receiver</label><br>
@@ -126,6 +127,3 @@ td, th {
 </div>
 
 <script src="inline.js"></script>
-<script>
-  document.documentElement.requestFullscreen();
-</script>
