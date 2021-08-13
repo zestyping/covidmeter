@@ -6,7 +6,7 @@ if len(sys.argv) < 2:
     raise SystemExit(f'Usage: {sys.argv[0]} <covidactnow.org API key>')
 
 BASE_URL = 'https://raw.githubusercontent.com/microcovid/microcovid/main'
-DEST_DIR = os.getcwd() + '/data'
+DEST_DIR = os.getcwd() + '/web'
 TEMP_DIR = tempfile.mkdtemp()
 CACHE_FILE = '.prevalence_data.json'
 os.makedirs(DEST_DIR, exist_ok=True)
@@ -34,9 +34,14 @@ def run_update_prevalence():
 
     def patched_json(self):
         result = update_prevalence.pydantic.BaseModel.json(self)
+        prevalence = json.loads(result)
+        for key in prevalence:
+            prevalence[key]['estimatedPrevalence'] = parseFloat(
+              self.__root__[key].as_csv_data()['Estimated prevalence']
+            )
         with open(f'{DEST_DIR}/prevalence.js', 'w') as f:
-            f.write('prevalence = ')
-            json.dump(json.loads(result), f, indent=2)
+            f.write('const prevalence = ')
+            json.dump(prevalence, f, indent=2)
             f.write(';\n')
         print(f'Wrote {DEST_DIR}/prevalence.js.')
         return result
@@ -44,6 +49,12 @@ def run_update_prevalence():
     update_prevalence.sleep = lambda seconds: time.sleep(seconds * 3)
     update_prevalence.AppLocations.json = patched_json
     update_prevalence.main()
+
+    with open('public/prevalence_data/date.csv') as f:
+        f.readline();
+        effective_date = f.readline().strip();
+    with open(f'{DEST_DIR}/prevalence.js', 'a') as f:
+        f.write('const effective_date = "' + effective_date + '";\n');
 
     if os.path.exists(CACHE_FILE):
         shutil.copy(CACHE_FILE, DEST_DIR)

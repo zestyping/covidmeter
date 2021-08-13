@@ -1,2 +1,3 @@
-data/
 *.pyc
+.prevalence_data.json
+web/prevalence.js

@@ -1,0 +1,114 @@
+<script src="prevalence.js"></script>
+<script src="model.js"></script>
+<style>
+@font-face {
+  font-family: 'Impact Label';
+  src: url('impactlabel.ttf') format('truetype');
+}
+
+html {
+  font-size: 24px;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+}
+
+label {
+  background: #fff;
+  color: #c24;
+  font-family: 'Impact Label';
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin: 0.5rem 0;
+  display: inline-block;
+}
+
+th { text-align: right; }
+td { text-align: center; }
+td, th {
+  min-width: 16rem;
+  height: 4rem;
+}
+
+.digit {
+  display: inline-block;
+  background-size: 504px 137.5px;
+  background-size: 25.2rem 6.875rem;
+  background-image: url(nixie.jpg);
+  width: 42px;
+  height: 68.75px;
+  width: 2.1rem;
+  height: 3.4375rem;
+  vertical-align: middle;
+}
+
+.d0:first-child,
+.d0:first-child + .d0,
+.d0:first-child + .d0 + .d0,
+.d0:first-child + .d0 + .d0 + .d0,
+.d0:first-child + .d0 + .d0 + .d0 + .d0,
+.d0:first-child + .d0 + .d0 + .d0 + .d0 + .d0 { opacity: 0.4; }
+
+.digit.d0 { background-position: 0 0; }
+.digit.d1 { background-position: -2.1rem 0; }
+.digit.d2 { background-position: -4.2rem 0; }
+.digit.d3 { background-position: -6.3rem 0; }
+.digit.d4 { background-position: -8.4rem 0; }
+.digit.d5 { background-position: -10.5rem 0; }
+.digit.d6 { background-position: -12.6rem 0; }
+.digit.d7 { background-position: -14.7rem 0; }
+.digit.d8 { background-position: -16.8rem 0; }
+.digit.d9 { background-position: -18.9rem 0; }
+</style>
+
+<div>
+  <table>
+    <tr>
+      <th></th>
+      <td><label>typical emitter</label></td>
+      <td><label>vaccinated emitter</label></td>
+    </tr>
+    <tr>
+      <th><label>Alameda</label></th>
+      <td digits='uc("mrna2", loc.alameda.typ, 60)'></td>
+      <td digits='uc("mrna2", loc.alameda.vac, 60)'></td>
+    </tr>
+    <tr>
+      <th><label>Contra Costa</label></td>
+      <td digits='uc("mrna2", loc.contra_costa.typ, 60)'></td>
+      <td digits='uc("mrna2", loc.contra_costa.vac, 60)'></td>
+    </tr>
+    <tr>
+      <th><label>Marin</label></th>
+      <td digits='uc("mrna2", loc.marin.typ, 60)'></td>
+      <td digits='uc("mrna2", loc.marin.vac, 60)'></td>
+    </tr>
+    <tr>
+      <th><label>San Francisco</label></th>
+      <td digits='uc("mrna2", loc.san_francisco.typ, 60)'></td>
+      <td digits='uc("mrna2", loc.san_francisco.vac, 60)'></td>
+    </tr>
+    <tr>
+      <th><label>San Mateo</label></th>
+      <td digits='uc("mrna2", loc.san_mateo.typ, 60)'></td>
+      <td digits='uc("mrna2", loc.san_mateo.vac, 60)'></td>
+    </tr>
+    <tr>
+      <th><label>Santa Clara</label></th>
+      <td digits='uc("mrna2", loc.santa_clara.typ, 60)'></td>
+      <td digits='uc("mrna2", loc.santa_clara.vac, 60)'></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td colspan=2>
+        <div><label>microcovids received per hour</label></div>
+        <div><label>by a fully mrna-vaccinated receiver</label></div>
+        <div><label>indoor - unmasked - normal socializing</label></div>
+      </td>
+  </table>
+</div>
+
+<script src="inline.js"></script>
