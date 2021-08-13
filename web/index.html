@@ -26,6 +26,10 @@ label {
   display: inline-block;
 }
 
+label a {
+  color: inherit;
+}
+
 th { text-align: right; }
 td { text-align: center; }
 td, th {
@@ -64,7 +68,11 @@ td, th {
 .digit.d9 { background-position: -18.9rem 0; }
 </style>
 
-<label>data from microcovid.org effective <span content="effective_date"></span></label>
+<label>model by <a href="http://microcovid.org/">microcovid.org</a></label><br>
+<label>data from 
+  <a href="https://github.com/CSSEGISandData/COVID-19">johns hopkins</a>
+  &amp; <a href="https://covidactnow.org/data-api">covidactnow.org</a>
+  effective <span content="effective_date"></span></label>
 <div>
   <table>
     <tr>
@@ -105,9 +113,9 @@ td, th {
     <tr>
       <td></td>
       <td colspan=2>
-        <div><label>microcovids received per hour</label></div>
-        <div><label>by a fully mrna-vaccinated receiver</label></div>
-        <div><label>indoor - unmasked - normal socializing</label></div>
+        <label>microcovids received per hour</label><br>
+        <label>by a fully mrna-vaccinated receiver</label><br>
+        <label>indoor - unmasked - normal socializing</label>
       </td>
   </table>
 </div>
