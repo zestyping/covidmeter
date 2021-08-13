@@ -16,6 +16,11 @@ body {
   background: #000;
   color: #fff;
   font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  height: 100%;
+  justify-content: space-evenly;
 }
 
 label {
@@ -38,7 +43,7 @@ label a {
 
 th { text-align: right; }
 td { text-align: center; min-width: 16rem; }
-th, td { height: 4rem; }
+th, td { height: 3rem; }
 
 .digit {
   display: inline-block;
@@ -71,14 +76,16 @@ th, td { height: 4rem; }
 .digit.d9 { background-position: -18.9rem 0; }
 </style>
 
-<label>
+<section>
+<h1><label>
   <span onclick="document.documentElement.requestFullscreen()">
     model
   </span> by <a href="http://microcovid.org/">microcovid.org</a></label><br>
-<label>data from 
+  <label>data from
   <a href="https://github.com/CSSEGISandData/COVID-19">johns hopkins</a>
   &amp; <a href="https://covidactnow.org/data-api">covidactnow</a>
   effective <span content="effective_date"></span></label>
+</h1>
 <div>
   <table>
     <tr>
@@ -97,19 +104,9 @@ th, td { height: 4rem; }
       <td digits='uc("mrna2", loc.contra_costa.vac, 60)'></td>
     </tr>
     <tr>
-      <th><label>Marin</label></th>
-      <td digits='uc("mrna2", loc.marin.typ, 60)'></td>
-      <td digits='uc("mrna2", loc.marin.vac, 60)'></td>
-    </tr>
-    <tr>
       <th><label>San Francisco</label></th>
       <td digits='uc("mrna2", loc.san_francisco.typ, 60)'></td>
       <td digits='uc("mrna2", loc.san_francisco.vac, 60)'></td>
-    </tr>
-    <tr>
-      <th><label>San Mateo</label></th>
-      <td digits='uc("mrna2", loc.san_mateo.typ, 60)'></td>
-      <td digits='uc("mrna2", loc.san_mateo.vac, 60)'></td>
     </tr>
     <tr>
       <th><label>Santa Clara</label></th>
@@ -125,5 +122,6 @@ th, td { height: 4rem; }
       </td>
   </table>
 </div>
+</section>
 
 <script src="inline.js"></script>
