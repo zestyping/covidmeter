@@ -36,11 +36,14 @@ def run_update_prevalence():
             prevalence[key]['estimatedPrevalence'] = float(
               self.__root__[key].as_csv_data()['Estimated prevalence']
             )
-        with open(f'{DEST_DIR}/prevalence.js', 'w') as f:
-            f.write('const prevalence = ')
-            json.dump(prevalence, f, indent=2)
-            f.write(';\n')
-        print(f'Wrote {DEST_DIR}/prevalence.js.')
+        if prevalence:
+            with open(f'{DEST_DIR}/prevalence.js', 'w') as f:
+                f.write('const prevalence = ')
+                json.dump(prevalence, f, indent=2)
+                f.write(';\n')
+            print(f'Wrote {DEST_DIR}/prevalence.js.')
+        else:
+            print(f'Empty data set!')
         return result
 
     update_prevalence.sleep = lambda seconds: time.sleep(seconds * 3)
