@@ -8,7 +8,8 @@ function mulberry32(a) {
     }
 }
 
-var rand = mulberry32(1337);
+var date = new Date().toISOString().replace(/\D/g, '').substr(0, 8);
+var rand = mulberry32(date - 0);
 var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT);
 for (var node = walker.nextNode(); node; node = walker.nextNode()) {
   const contentExpr = node.getAttribute('content');
@@ -29,6 +30,15 @@ for (var node = walker.nextNode(); node; node = walker.nextNode()) {
     node.innerHTML = digits.map(d => `<span class="digit d${d}"></span>`).join('');
   }
   if (node.tagName === 'LABEL') {
-    node.setAttribute('style', `transform: rotate(${rand() - 0.5}deg)`);
+    node.setAttribute('style', `transform: rotate(${rand()*1.2 - 0.6}deg)`);
   }
 }
+
+function flicker() {
+  for (const e of document.querySelectorAll('[digits]')) {
+    e.style.opacity = 0.9 + rand() * 0.1;
+  }
+  window.requestAnimationFrame(flicker);
+}
+
+flicker();
