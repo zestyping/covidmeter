@@ -17,7 +17,7 @@ def download_file(path):
     dir = os.path.dirname(path)
     if dir:
         os.makedirs(dir, exist_ok=True)
-    with open(path, 'w') as f:
+    with open(path, 'w', encoding='utf8') as f:
         f.write(requests.get(f'{BASE_URL}/{path}').text)
 
 def run_update_prevalence():
