@@ -27,7 +27,10 @@ for (var node = walker.nextNode(); node; node = walker.nextNode()) {
       Math.floor(count/10) % 10,
       Math.floor(count) % 10
     ];
-    node.innerHTML = digits.map(d => `<span class="digit d${d}"></span>`).join('');
+    for (var z = 0; digits[z] == 0; z++);
+    node.innerHTML = digits.map(
+      (d, i) => `<span class="digit d${d} ${i < z ? 'leading' : ''}"></span>`
+    ).join('');
   }
   if (node.tagName === 'LABEL') {
     const angle = rand()*1.2 - 0.6;
@@ -37,10 +40,14 @@ for (var node = walker.nextNode(); node; node = walker.nextNode()) {
   }
 }
 
+for (const e of document.querySelectorAll('.digit')) {
+  e.style.opacity = 1 - rand() * 0.2;
+}
+
 var hum = 0;
 function flicker() {
   for (const e of document.querySelectorAll('[digits]')) {
-    e.style.opacity = (1 - rand() * 0.1) * (1 - hum * 0.1);
+    e.style.opacity = (1 - rand() * 0.02 - hum * 0.03)**3;
   }
   hum = 1 - hum;
   window.requestAnimationFrame(flicker);
