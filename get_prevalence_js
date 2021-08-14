@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from collections import namedtuple
 import json, os, requests, shutil, sys, tempfile, time
 
 if len(sys.argv) < 2:
@@ -46,8 +47,16 @@ def run_update_prevalence():
             print(f'Empty data set!')
         return result
 
+    parse_json = update_prevalence.parse_json
+
+    def patched_parse_json(cache, model, url):
+        if model.__name__.startswith('Canada'):  # skip Canada
+            return namedtuple(model.__name__, ['hr', 'prov'])([], [])
+        return parse_json(cache, model, url)
+
     update_prevalence.sleep = lambda seconds: time.sleep(seconds * 3)
     update_prevalence.AppLocations.json = patched_json
+    update_prevalence.parse_json = patched_parse_json
     update_prevalence.main()
 
     with open('public/prevalence_data/date.csv') as f:
