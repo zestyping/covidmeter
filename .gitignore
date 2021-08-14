@@ -1,3 +1,4 @@
 *.pyc
 .prevalence_data.json
+.venv
 web/prevalence.js

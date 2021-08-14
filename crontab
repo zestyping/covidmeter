@@ -1,0 +1,7 @@
+SHELL=/bin/bash
+LC_ALL=en_US.UTF-8
+LANG=en_US.UTF-8
+
+# m h  dom mon dow   command
+37 * * * * cd dev/covidmeter; (source .venv/bin/activate; ./get_prevalence_js ee4b619affe6458e8dd2838d260d7a01) >> ~/covidmeter.log 2>&1
+*/5 * * * * cd dev/covidmeter; git pull >> ~/covidmeter.log 2>&1

@@ -25,7 +25,11 @@ def run_update_prevalence():
     download_file('update_prevalence.py')
     download_file('us_state_abbrev.py')
     download_file('public/tracker/vaccine_table.csv')
-    download_file('src/data/location.ts')
+    download_file('src/data/locations.ts')
+    with open('src/data/location.ts', 'w') as f:
+        f.write('// update_prevalence locations start\n')
+        f.write('// update_prevalence locations end\n')
+        f.write('// update_prevalence date\n')
     sys.path.insert(0, '.')
 
     import update_prevalence
