@@ -30,14 +30,19 @@ for (var node = walker.nextNode(); node; node = walker.nextNode()) {
     node.innerHTML = digits.map(d => `<span class="digit d${d}"></span>`).join('');
   }
   if (node.tagName === 'LABEL') {
-    node.setAttribute('style', `transform: rotate(${rand()*1.2 - 0.6}deg)`);
+    const angle = rand()*1.2 - 0.6;
+    const x = rand()*0.3 - 0.15;
+    const y = rand()*0.3 - 0.15;
+    node.setAttribute('style', `transform: rotate(${angle}deg) translate(${x}rem,${y}rem)`);
   }
 }
 
+var hum = 0;
 function flicker() {
   for (const e of document.querySelectorAll('[digits]')) {
-    e.style.opacity = 0.9 + rand() * 0.1;
+    e.style.opacity = (1 - rand() * 0.1) * (1 - hum * 0.1);
   }
+  hum = 1 - hum;
   window.requestAnimationFrame(flicker);
 }
 
