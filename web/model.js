@@ -14,9 +14,10 @@ for (const code in prevalence) {
 }
 
 const VACCINE_MULTIPLIERS = {
-  'jj': 0.36,
-  'mrna1': 0.76,
-  'mrna2': 0.17
+  'jj': 0.95,  // was 0.36,
+  'mrna1': 1.00,  // was 0.76,
+  'mrna2': 0.80,  // was 0.17
+  'mrna3': 0.25
 };
 const TRANSMISSION_PER_HOUR = 0.14;
 const MAX_TRANSMISSION = 0.60;

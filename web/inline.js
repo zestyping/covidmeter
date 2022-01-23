@@ -47,9 +47,9 @@ for (const e of document.querySelectorAll('.digit')) {
 var hum = 0;
 function flicker() {
   for (const e of document.querySelectorAll('[digits]')) {
-    e.style.opacity = (1 - rand() * 0.02 - Math.floor(hum/2) * 0.02)**2;
+    e.style.opacity = (1 - rand() * 0.02 - hum * 0.03)**2;
   }
-  hum = (hum + 1) % 4;
+  hum = hum ^ 1;
   window.requestAnimationFrame(flicker);
 }
 
