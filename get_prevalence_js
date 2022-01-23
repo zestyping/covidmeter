@@ -13,19 +13,27 @@ CACHE_FILE = '.prevalence_data.json'
 os.makedirs(DEST_DIR, exist_ok=True)
 os.environ['CAN_API_KEY'] = sys.argv[1]
 
+def write_file(path, content):
+    with open(path, 'w', encoding='utf8') as f:
+        f.write(content)
+
 def download_file(path):
     print(f'Fetching {path}...')
     dir = os.path.dirname(path)
     if dir:
         os.makedirs(dir, exist_ok=True)
-    with open(path, 'w', encoding='utf8') as f:
-        f.write(requests.get(f'{BASE_URL}/{path}').text)
+    write_file(path, requests.get(f'{BASE_URL}/{path}').text)
 
 def run_update_prevalence():
     download_file('update_prevalence.py')
     download_file('us_state_abbrev.py')
     download_file('public/tracker/vaccine_table.csv')
     download_file('src/data/locations.ts')
+    write_file('sentry_sdk.py', '''
+def init(*args, **kwargs): pass
+def capture_message(*args, **kwargs): pass
+def capture_exception(*args, **kwargs): pass
+''')
     with open('src/data/location.ts', 'w') as f:
         f.write('// update_prevalence locations start\n')
         f.write('// update_prevalence locations end\n')
@@ -58,7 +66,13 @@ def run_update_prevalence():
             return namedtuple(model.__name__, ['hr', 'prov'])([], [])
         return parse_json(cache, model, url)
 
-    update_prevalence.sleep = lambda seconds: time.sleep(seconds * 3)
+    # Certain countries are missing data needed for rollups; skip them
+    alldata_rollup_totals = update_prevalence.AllData.rollup_totals
+    def new_rollup_totals(self):
+        del self.countries['Antarctica']
+        return alldata_rollup_totals(self)
+    update_prevalence.AllData.rollup_totals = new_rollup_totals
+
     update_prevalence.AppLocations.json = patched_json
     update_prevalence.parse_json = patched_parse_json
     update_prevalence.main()
@@ -78,4 +92,4 @@ finally:
     if os.path.exists(CACHE_FILE):
         shutil.copy(CACHE_FILE, DEST_DIR)
     os.chdir(DEST_DIR)
-    shutil.rmtree(TEMP_DIR)
+    # shutil.rmtree(TEMP_DIR)
