@@ -66,15 +66,18 @@ def capture_exception(*args, **kwargs): pass
             return namedtuple(model.__name__, ['hr', 'prov'])([], [])
         return parse_json(cache, model, url)
 
-    # Certain countries are missing data needed for rollups; skip them
-    alldata_rollup_totals = update_prevalence.AllData.rollup_totals
-    def new_rollup_totals(self):
-        del self.countries['Antarctica']
-        return alldata_rollup_totals(self)
-    update_prevalence.AllData.rollup_totals = new_rollup_totals
+    ignore_jhu_place = update_prevalence.ignore_jhu_place
+
+    def patched_ignore_jhu_place(line):
+        if 'Olympics' in line.Country_Region:
+            return True
+        if 'Antarctica' in line.Country_Region:
+            return True
+        return ignore_jhu_place(line)
 
     update_prevalence.AppLocations.json = patched_json
     update_prevalence.parse_json = patched_parse_json
+    update_prevalence.ignore_jhu_place = patched_ignore_jhu_place
     update_prevalence.main()
 
     with open('public/prevalence_data/date.csv') as f:
