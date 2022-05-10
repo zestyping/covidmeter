@@ -53,4 +53,22 @@ function flicker() {
   window.requestAnimationFrame(flicker);
 }
 
+var help = document.getElementById('help');
+var helpbox = document.getElementById('helpbox');
+
+function showHelp() {
+  help.className = 'appear';
+  window.setTimeout(() => { help.className = 'vanish'; }, 1);
+}
+
+function openHelpBox(event) {
+  helpbox.style.opacity = 1;
+  event.stopPropagation();
+}
+
+function closeHelpBox() {
+  helpbox.style.opacity = 0;
+}
+
+showHelp();
 flicker();

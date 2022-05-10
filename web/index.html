@@ -26,6 +26,11 @@ body {
 
 section {
   padding: 1rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 
 label {
@@ -44,6 +49,10 @@ label {
 label a {
   color: inherit;
   text-decoration: none;
+}
+
+a:hover {
+  color: #fab;
 }
 
 th { text-align: right; }
@@ -73,54 +82,118 @@ th, td { height: 3rem; }
 .digit.d8 { background-position: -16.8rem 0; }
 .digit.d9 { background-position: -18.9rem 0; }
 .digit.leading { opacity: 0.4 !important; }
+
+.row { display: flex; }
+
+.appear {
+  opacity: 1;
+  transition: none;
+}
+
+.vanish {
+  opacity: 0;
+  transition: 5s;
+  transition-delay: 10s;
+}
+
+#help {
+  margin-left: 9em;
+}
+
+#helpbox {
+  box-sizing: border-box;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: absolute;
+  margin: auto;
+  padding: 1.5em 2em;
+  background: #ddd;
+  color: #000;
+  box-shadow: 0px 6px 24px #000;
+  width: 32em;
+  max-width: 80vw;
+  font-size: 20px;
+  line-height: 1.4;
+}
 </style>
 
+<body onmousemove="showHelp()" onclick="closeHelpBox()">
 <section>
-<h1><label>
-  <span onclick="document.documentElement.requestFullscreen()">
-    model
-  </span> by <a href="http://microcovid.org/">microcovid.org</a></label><br>
-  <label>data from
-  <a href="https://github.com/CSSEGISandData/COVID-19">johns hopkins</a>
-  &amp; <a href="https://covidactnow.org/data-api">covidactnow</a>
+<h1>
+  <div class="row">
+    <label>Model by <a href="http://microcovid.org/">microcovid.org</a></label>
+    <label id="help"><a href="#" onclick="openHelpBox(event)">How does this work?</a></label>
+  </div>
+  <label>Data from
+  <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins</a>
+  &amp; <a href="https://covidactnow.org/data-api">CovidActNow</a>
   effective <span content="effective_date"></span></label>
 </h1>
 <div>
   <table>
     <tr>
       <th></th>
-      <td><label>typical emitter</label></td>
-      <td><label>vaccinated emitter</label></td>
+      <td><label>Nearby emitter</label></td>
+      <td><label>Distanced emitter</label></td>
     </tr>
     <tr>
       <th><label>Alameda</label></th>
       <td digits='uc("mrna3", loc.alameda.typ, 60)'></td>
-      <td digits='uc("mrna3", loc.alameda.vac, 60)'></td>
+      <td digits='uc("mrna3", loc.alameda.typ, 60, "d")'></td>
     </tr>
     <tr>
       <th><label>Contra Costa</label></td>
       <td digits='uc("mrna3", loc.contra_costa.typ, 60)'></td>
-      <td digits='uc("mrna3", loc.contra_costa.vac, 60)'></td>
+      <td digits='uc("mrna3", loc.contra_costa.typ, 60, "d")'></td>
     </tr>
     <tr>
       <th><label>San Francisco</label></th>
       <td digits='uc("mrna3", loc.san_francisco.typ, 60)'></td>
-      <td digits='uc("mrna3", loc.san_francisco.vac, 60)'></td>
+      <td digits='uc("mrna3", loc.san_francisco.typ, 60, "d")'></td>
     </tr>
     <tr>
       <th><label>Santa Clara</label></th>
       <td digits='uc("mrna3", loc.santa_clara.typ, 60)'></td>
-      <td digits='uc("mrna3", loc.santa_clara.vac, 60)'></td>
+      <td digits='uc("mrna3", loc.santa_clara.typ, 60, "d")'></td>
     </tr>
     <tr>
       <th></th>
       <td colspan=2>
         <label>microcovids received per hour</label><br>
-        <label>by a triple-mrna-vaccinated receiver</label><br>
-        <label>indoor - unmasked - normal socializing</label>
+        <label>by a triple-mRNA-vaccinated receiver</label><br>
+        <label>Indoor - Unmasked - Normal socializing</label>
       </td>
   </table>
 </div>
 </section>
 
+<div id="helpbox">
+  <p>
+    A <strong>microcovid</strong> is a unit of risk.
+    One microcovid is a one-in-a-million chance of getting COVID.
+  </p>
+  <p>
+    An <strong>emitter</strong> is an average person in your area.
+    A <strong>nearby</strong> emitter is someone sitting next to you.
+    A <strong>distanced</strong> emitter is someone keeping 6 feet away from you.
+    This model assumes you are vaccinated and boosted.
+  </p>
+  <p>
+    For example, suppose you are joining a dinner party
+    with 5 other people in Alameda County,
+    and the number under "nearby emitter" for Alameda is 100.
+    Each hour indoors near 5 people incurs a risk of 500 microcovids.
+    If the party lasts two hours,
+    the model estimates you will receive 1000 microcovids,
+    which is a 0.1% risk of getting COVID from that dinner party.
+  </p>
+  <p>
+    Risks add up.
+    If you go to ten parties this month and each one has a 0.1% risk,
+    your risk of getting COVID this month will be 1%.
+  </p>
+</div>
+
 <script src="inline.js"></script>
+</body>
