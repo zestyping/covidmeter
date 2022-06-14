@@ -59,13 +59,6 @@ def capture_exception(*args, **kwargs): pass
             print(f'Empty data set!')
         return result
 
-    parse_json = update_prevalence.parse_json
-
-    def patched_parse_json(cache, model, url):
-        if model.__name__.startswith('Canada'):  # skip Canada
-            return namedtuple(model.__name__, ['hr', 'prov'])([], [])
-        return parse_json(cache, model, url)
-
     ignore_jhu_place = update_prevalence.ignore_jhu_place
 
     def patched_ignore_jhu_place(line):
@@ -76,7 +69,8 @@ def capture_exception(*args, **kwargs): pass
         return ignore_jhu_place(line)
 
     update_prevalence.AppLocations.json = patched_json
-    update_prevalence.parse_json = patched_parse_json
+    update_prevalence.parse_canada_prevalence_data = lambda *args: 1
+    update_prevalence.parse_romania_prevalence_data = lambda *args: 1
     update_prevalence.ignore_jhu_place = patched_ignore_jhu_place
     update_prevalence.main()
 
